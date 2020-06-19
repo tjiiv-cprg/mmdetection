@@ -40,10 +40,10 @@ class VisDroneDataset(CustomDataset):
 
     @staticmethod
     def open_label_file(path):
-        label = np.genfromtxt(path, delimiter=',', dtype=np.int64)
-        num_dims = len(label.shape)
-        if num_dims == 1:
-            label = label.reshape(1, -1)
+        label = np.loadtxt(path, delimiter=',', dtype=np.int64,
+                           ndmin=2, usecols=range(8))
+        if not len(label):
+            label = label.reshape(0, 8)
         return label
 
     def load_annotations(self, ann_file):
@@ -76,14 +76,6 @@ class VisDroneDataset(CustomDataset):
             x1y1 = label[:, 0:2]
             wh = label[:, 2:4]
             x2y2 = x1y1 + wh
-
-            # data_info = self.data_infos[idx]
-            # width = data_info['width']
-            # height = data_info['height']
-            # x1y1 = x1y1.clip(min=0)
-            # x2y2[:, 0] = x2y2[:, 0].clip(max=width)
-            # x2y2[:, 1] = x2y2[:, 1].clip(max=height)
-            # wh = x2y2 - x1y1
 
             _gt_bboxes = np.concatenate((x1y1, x2y2), axis=1).astype(np.float32)
             _gt_labels = label[:, 5]
