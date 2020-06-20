@@ -239,8 +239,8 @@ data = dict(
         pipeline=test_pipeline))
 evaluation = dict(interval=1)
 # optimizer
-# mmdet默认学习率会梯度爆炸，因此减小之
-optimizer = dict(type='SGD', lr=0.002, momentum=0.9, weight_decay=0.0001)
+# mmdet默认学习率适用于8卡分布式训练，用--autoscale_lr可以自动调整学习率。此处0.01适用于batch_size=8。
+optimizer = dict(type='SGD', lr=0.01, momentum=0.9, weight_decay=0.0001)
 optimizer_config = dict(grad_clip=None)
 # learning policy
 lr_config = dict(
